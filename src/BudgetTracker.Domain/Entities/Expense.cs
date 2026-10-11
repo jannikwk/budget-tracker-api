@@ -13,8 +13,29 @@ public class Expense
 	public string PaymentMethod { get; init; }
 	public string ExpenseType { get; init; }
 
-	private Expense(Guid id, DateTime date, decimal amount, string merchant, string category, string? subCategory, string paymentMethod, string expenseType)
+	public Expense(Guid id, DateTime date, decimal amount, string merchant, string category, string? subCategory, string paymentMethod, string expenseType)
 	{
+		if (id == Guid.Empty)
+			throw new ArgumentException("Id cannot be empty.", nameof(id));
+
+		if (date > DateTime.Now)
+			throw new ArgumentException("Date cannot be in the future.", nameof(date));
+
+		if (amount <= 0)
+			throw new ArgumentException("Expense amount must be greater than zero.", nameof(amount));
+
+		if (string.IsNullOrWhiteSpace(merchant))
+			throw new ArgumentException("Merchant name is required.", nameof(merchant));
+
+		if (string.IsNullOrWhiteSpace(category))
+			throw new ArgumentException("Category is required.", nameof(category));
+
+		if (string.IsNullOrWhiteSpace(paymentMethod))
+			throw new ArgumentException("Payment method is required.", nameof(paymentMethod));
+
+		if (string.IsNullOrWhiteSpace(expenseType))
+			throw new ArgumentException("Expense type is required.", nameof(expenseType));
+
 		Id = id;
 		Date = date;
 		Amount = amount;
@@ -23,71 +44,5 @@ public class Expense
 		SubCategory = subCategory;
 		PaymentMethod = paymentMethod;
 		ExpenseType = expenseType;
-	}
-
-	public static Builder Create() => new();
-	public sealed class Builder
-	{
-		private Guid _id = Guid.NewGuid();
-		private DateTime _date;
-		private decimal _amount;
-		private string _merchant;
-		private string _category;
-		private string? _subCategory;
-		private string _paymentMethod;
-		private string _expenseType;
-
-		public Builder WithId(Guid id)
-		{
-			_id = id;
-			return this;
-		}
-
-		public Builder WithDate(DateTime date)
-		{
-			_date = date;
-			return this;
-		}
-
-		public Builder WithAmount(decimal amount)
-		{
-			_amount = amount;
-			return this;
-		}
-
-		public Builder WithMerchant(string merchant)
-		{
-			_merchant = merchant;
-			return this;
-		}
-
-		public Builder WithCategory(string category)
-		{
-			_category = category;
-			return this;
-		}
-
-		public Builder WithSubCategory(string subCategory)
-		{
-			_subCategory = subCategory;
-			return this;
-		}
-
-		public Builder WithPaymentMethod(string paymentMethod)
-		{
-			_paymentMethod = paymentMethod;
-			return this;
-		}
-
-		public Builder WithExpenseType(string expenseType)
-		{
-			_expenseType = expenseType;
-			return this;
-		}
-
-		public Expense Build()
-		{
-			return new Expense(_id, _date, _amount, _merchant, _category, _subCategory, _paymentMethod, _expenseType);
-		}
 	}
 }
