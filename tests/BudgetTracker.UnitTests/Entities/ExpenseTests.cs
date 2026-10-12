@@ -16,7 +16,7 @@ public class ExpenseTests
             date,
             42.50m,
             "Coffee Shop",
-            "Food",
+            Category.Food,
             "Coffee",
             PaymentMethod.CreditCard,
             "Personal");
@@ -25,7 +25,7 @@ public class ExpenseTests
         Assert.Equal(date, expense.Date);
         Assert.Equal(42.50m, expense.Amount);
         Assert.Equal("Coffee Shop", expense.Merchant);
-        Assert.Equal("Food", expense.Category);
+        Assert.Equal(Category.Food, expense.Category);
         Assert.Equal("Coffee", expense.SubCategory);
         Assert.Equal(PaymentMethod.CreditCard, expense.PaymentMethod);
         Assert.Equal("Personal", expense.ExpenseType);
@@ -66,7 +66,7 @@ public class ExpenseTests
         var exception = Assert.Throws<ArgumentException>(() => field switch
         {
             nameof(Expense.Merchant) => CreateExpense(merchant: " "),
-            nameof(Expense.Category) => CreateExpense(category: ""),
+            nameof(Expense.Category) => CreateExpense(category: (Category)999),
             nameof(Expense.PaymentMethod) => CreateExpense(paymentMethod: (PaymentMethod)999),
             nameof(Expense.ExpenseType) => CreateExpense(expenseType: " "),
             _ => throw new ArgumentOutOfRangeException(nameof(field))
@@ -80,7 +80,7 @@ public class ExpenseTests
         DateTime? date = null,
         decimal amount = 10m,
         string merchant = "Merchant",
-        string category = "Category",
+        Category category = Category.Food,
         string? subCategory = null,
         PaymentMethod paymentMethod = PaymentMethod.CreditCard,
         string expenseType = "Personal")

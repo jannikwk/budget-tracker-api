@@ -8,12 +8,12 @@ public class Expense
 	public DateTime Date { get; init; }
 	public decimal Amount { get; init; }
 	public string Merchant { get; init; }
-	public string Category { get; init; }
+	public Category Category { get; init; }
 	public string? SubCategory { get; init; }
 	public PaymentMethod PaymentMethod { get; init; }
 	public string ExpenseType { get; init; }
 
-	public Expense(Guid id, DateTime date, decimal amount, string merchant, string category, 
+	public Expense(Guid id, DateTime date, decimal amount, string merchant, Category category,
 		string? subCategory, PaymentMethod paymentMethod, string expenseType)
 	{
 		if (id == Guid.Empty)
@@ -28,7 +28,7 @@ public class Expense
 		if (string.IsNullOrWhiteSpace(merchant))
 			throw new ArgumentException("Merchant name is required.", nameof(merchant));
 
-		if (string.IsNullOrWhiteSpace(category))
+		if (!Enum.IsDefined(category))
 			throw new ArgumentException("Category is required.", nameof(category));
 
 		if (!Enum.IsDefined(paymentMethod))

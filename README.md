@@ -11,7 +11,7 @@ classDiagram-v2
         + Date: DateTime
         + Amount: decimal
         + Merchant: string
-        + Category: string
+        + Category: Category
         + SubCategory: string?
         + PaymentMethod: PaymentMethod
         + ExpenseType: string
@@ -32,8 +32,29 @@ classDiagram-v2
         Voucher = 10
         
     }
+
+    class Category {
+        <<Enum>>
+        Housing = 1
+        Food = 2
+        Transportation = 3
+        Utilities = 4
+        Healthcare = 5
+        Insurance = 6
+        DebtRepayment = 7
+        PersonalCare = 8
+        Entertainment = 9
+        Education = 10
+        Travel = 11
+        Shopping = 12
+        GiftsAndDonations = 13
+        SavingsAndInvestments = 14
+        Taxes = 15
+        Other = 16
+    }
     
     Expense --> PaymentMethod : uses
+    Expense --> Category : uses
 
     class Income {
         <<Entity>>
