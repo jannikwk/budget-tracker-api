@@ -1,0 +1,97 @@
+﻿using BudgetTracker.Domain.Entities;
+
+namespace BudgetTracker.Unittests.Entities;
+
+public class ExpenseTests
+{
+    [Fact]
+    public void Constructor_WithValidValues_SetsProperties()
+    {
+        var id = Guid.NewGuid();
+        var date = new DateTime(2026, 1, 15);
+
+        var expense = new Expense(
+            id,
+            date,
+            42.50m,
+            "Coffee Shop",
+            "Food",
+            "Coffee",
+            "Card",
+            "Personal");
+
+        Assert.Equal(id, expense.Id);
+        Assert.Equal(date, expense.Date);
+        Assert.Equal(42.50m, expense.Amount);
+        Assert.Equal("Coffee Shop", expense.Merchant);
+        Assert.Equal("Food", expense.Category);
+        Assert.Equal("Coffee", expense.SubCategory);
+        Assert.Equal("Card", expense.PaymentMethod);
+        Assert.Equal("Personal", expense.ExpenseType);
+    }
+
+    [Fact]
+    public void Constructor_WithEmptyId_ThrowsArgumentException()
+    {
+        var exception = Assert.Throws<ArgumentException>(() => CreateExpense(id: Guid.Empty));
+
+        Assert.Equal("id", exception.ParamName);
+    }
+
+    [Fact]
+    public void Constructor_WithFutureDate_ThrowsArgumentException()
+    {
+        var exception = Assert.Throws<ArgumentException>(() =>
+            CreateExpense(date: DateTime.Now.AddMinutes(1)));
+
+        Assert.Equal("date", exception.ParamName);
+    }
+
+    [Fact]
+    public void Constructor_WithNonPositiveAmount_ThrowsArgumentException()
+    {
+        var exception = Assert.Throws<ArgumentException>(() => CreateExpense(amount: 0));
+
+        Assert.Equal("amount", exception.ParamName);
+    }
+
+    [Theory]
+    [InlineData(nameof(Expense.Merchant))]
+    [InlineData(nameof(Expense.Category))]
+    [InlineData(nameof(Expense.PaymentMethod))]
+    [InlineData(nameof(Expense.ExpenseType))]
+    public void Constructor_WithMissingRequiredText_ThrowsArgumentException(string field)
+    {
+        var exception = Assert.Throws<ArgumentException>(() => field switch
+        {
+            nameof(Expense.Merchant) => CreateExpense(merchant: " "),
+            nameof(Expense.Category) => CreateExpense(category: ""),
+            nameof(Expense.PaymentMethod) => CreateExpense(paymentMethod: "\t"),
+            nameof(Expense.ExpenseType) => CreateExpense(expenseType: " "),
+            _ => throw new ArgumentOutOfRangeException(nameof(field))
+        });
+
+        Assert.Equal(field[..1].ToLowerInvariant() + field[1..], exception.ParamName);
+    }
+
+    private static Expense CreateExpense(
+        Guid? id = null,
+        DateTime? date = null,
+        decimal amount = 10m,
+        string merchant = "Merchant",
+        string category = "Category",
+        string? subCategory = null,
+        string paymentMethod = "Card",
+        string expenseType = "Personal")
+    {
+        return new Expense(
+            id ?? Guid.NewGuid(),
+            date ?? DateTime.Now.AddDays(-1),
+            amount,
+            merchant,
+            category,
+            subCategory,
+            paymentMethod,
+            expenseType);
+    }
+}
