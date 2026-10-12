@@ -17,4 +17,13 @@ classDiagram-v2
         + ExpenseType: string
         - ~~Constructor~~ Expense(...)
     }
+
+    class Income {
+        <<Entity>>
+        + Id: Guid
+        + IncomeType: string
+        + Amount: decimal
+        + Date: DateTime
+        - ~~Constructor~~ Income(Id, IncomeType, Amount, Date)
+    }
 ```
