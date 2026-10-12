@@ -1,4 +1,5 @@
 ﻿using BudgetTracker.Domain.Entities;
+using BudgetTracker.Domain.Enums;
 
 namespace BudgetTracker.Unittests.Entities;
 
@@ -17,7 +18,7 @@ public class ExpenseTests
             "Coffee Shop",
             "Food",
             "Coffee",
-            "Card",
+            PaymentMethod.CreditCard,
             "Personal");
 
         Assert.Equal(id, expense.Id);
@@ -26,7 +27,7 @@ public class ExpenseTests
         Assert.Equal("Coffee Shop", expense.Merchant);
         Assert.Equal("Food", expense.Category);
         Assert.Equal("Coffee", expense.SubCategory);
-        Assert.Equal("Card", expense.PaymentMethod);
+        Assert.Equal(PaymentMethod.CreditCard, expense.PaymentMethod);
         Assert.Equal("Personal", expense.ExpenseType);
     }
 
@@ -66,7 +67,7 @@ public class ExpenseTests
         {
             nameof(Expense.Merchant) => CreateExpense(merchant: " "),
             nameof(Expense.Category) => CreateExpense(category: ""),
-            nameof(Expense.PaymentMethod) => CreateExpense(paymentMethod: "\t"),
+            nameof(Expense.PaymentMethod) => CreateExpense(paymentMethod: (PaymentMethod)999),
             nameof(Expense.ExpenseType) => CreateExpense(expenseType: " "),
             _ => throw new ArgumentOutOfRangeException(nameof(field))
         });
@@ -81,7 +82,7 @@ public class ExpenseTests
         string merchant = "Merchant",
         string category = "Category",
         string? subCategory = null,
-        string paymentMethod = "Card",
+        PaymentMethod paymentMethod = PaymentMethod.CreditCard,
         string expenseType = "Personal")
     {
         return new Expense(

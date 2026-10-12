@@ -13,10 +13,27 @@ classDiagram-v2
         + Merchant: string
         + Category: string
         + SubCategory: string?
-        + PaymentMethod: string
+        + PaymentMethod: PaymentMethod
         + ExpenseType: string
         - ~~Constructor~~ Expense(...)
     }
+    
+    class PaymentMethod {
+        <<Enum>>
+        Cash = 1
+        DebitCard = 2
+        CreditCard = 3
+        BankTransfer = 4
+        DirectDebit = 5
+        MobilePayment = 6
+        DigitalWallet = 7
+        BuyNowPayLater = 8
+        Crypto = 9
+        Voucher = 10
+        
+    }
+    
+    Expense --> PaymentMethod : uses
 
     class Income {
         <<Entity>>

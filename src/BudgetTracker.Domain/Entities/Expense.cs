@@ -1,4 +1,4 @@
-using System;
+using BudgetTracker.Domain.Enums;
 
 namespace BudgetTracker.Domain.Entities;
 
@@ -10,10 +10,11 @@ public class Expense
 	public string Merchant { get; init; }
 	public string Category { get; init; }
 	public string? SubCategory { get; init; }
-	public string PaymentMethod { get; init; }
+	public PaymentMethod PaymentMethod { get; init; }
 	public string ExpenseType { get; init; }
 
-	public Expense(Guid id, DateTime date, decimal amount, string merchant, string category, string? subCategory, string paymentMethod, string expenseType)
+	public Expense(Guid id, DateTime date, decimal amount, string merchant, string category, 
+		string? subCategory, PaymentMethod paymentMethod, string expenseType)
 	{
 		if (id == Guid.Empty)
 			throw new ArgumentException("Id cannot be empty.", nameof(id));
@@ -30,7 +31,7 @@ public class Expense
 		if (string.IsNullOrWhiteSpace(category))
 			throw new ArgumentException("Category is required.", nameof(category));
 
-		if (string.IsNullOrWhiteSpace(paymentMethod))
+		if (!Enum.IsDefined(paymentMethod))
 			throw new ArgumentException("Payment method is required.", nameof(paymentMethod));
 
 		if (string.IsNullOrWhiteSpace(expenseType))
