@@ -1,4 +1,5 @@
 using BudgetTracker.Domain.Entities;
+using BudgetTracker.Domain.Enums;
 
 namespace BudgetTracker.Unittests.Entities;
 
@@ -10,10 +11,10 @@ public class IncomeTests
         var id = Guid.NewGuid();
         var date = new DateTime(2026, 1, 15);
 
-        var income = new Income(id, "Salary", 4200.50m, date);
+        var income = new Income(id, IncomeType.Salary, 4200.50m, date);
 
         Assert.Equal(id, income.Id);
-        Assert.Equal("Salary", income.IncomeType);
+        Assert.Equal(IncomeType.Salary, income.IncomeType);
         Assert.Equal(4200.50m, income.Amount);
         Assert.Equal(date, income.Date);
     }
@@ -45,11 +46,11 @@ public class IncomeTests
 
     [Theory]
     [InlineData(nameof(Income.IncomeType))]
-    public void Constructor_WithMissingRequiredText_ThrowsArgumentException(string field)
+    public void Constructor_WithMissingRequiredValue_ThrowsArgumentException(string field)
     {
         var exception = Assert.Throws<ArgumentException>(() => field switch
         {
-            nameof(Income.IncomeType) => CreateIncome(incomeType: " "),
+            nameof(Income.IncomeType) => CreateIncome(incomeType: (IncomeType)999),
             _ => throw new ArgumentOutOfRangeException(nameof(field))
         });
 
@@ -58,7 +59,7 @@ public class IncomeTests
 
     private static Income CreateIncome(
         Guid? id = null,
-        string incomeType = "Salary",
+        IncomeType incomeType = IncomeType.Salary,
         decimal amount = 1000m,
         DateTime? date = null)
     {

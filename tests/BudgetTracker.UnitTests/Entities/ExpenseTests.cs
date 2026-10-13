@@ -19,7 +19,7 @@ public class ExpenseTests
             Category.Food,
             "Coffee",
             PaymentMethod.CreditCard,
-            "Personal");
+            ExpenseType.Personal);
 
         Assert.Equal(id, expense.Id);
         Assert.Equal(date, expense.Date);
@@ -28,7 +28,7 @@ public class ExpenseTests
         Assert.Equal(Category.Food, expense.Category);
         Assert.Equal("Coffee", expense.SubCategory);
         Assert.Equal(PaymentMethod.CreditCard, expense.PaymentMethod);
-        Assert.Equal("Personal", expense.ExpenseType);
+        Assert.Equal(ExpenseType.Personal, expense.ExpenseType);
     }
 
     [Fact]
@@ -61,14 +61,14 @@ public class ExpenseTests
     [InlineData(nameof(Expense.Category))]
     [InlineData(nameof(Expense.PaymentMethod))]
     [InlineData(nameof(Expense.ExpenseType))]
-    public void Constructor_WithMissingRequiredText_ThrowsArgumentException(string field)
+    public void Constructor_WithMissingRequiredValue_ThrowsArgumentException(string field)
     {
         var exception = Assert.Throws<ArgumentException>(() => field switch
         {
             nameof(Expense.Merchant) => CreateExpense(merchant: " "),
             nameof(Expense.Category) => CreateExpense(category: (Category)999),
             nameof(Expense.PaymentMethod) => CreateExpense(paymentMethod: (PaymentMethod)999),
-            nameof(Expense.ExpenseType) => CreateExpense(expenseType: " "),
+            nameof(Expense.ExpenseType) => CreateExpense(expenseType: (ExpenseType)999),
             _ => throw new ArgumentOutOfRangeException(nameof(field))
         });
 
@@ -83,7 +83,7 @@ public class ExpenseTests
         Category category = Category.Food,
         string? subCategory = null,
         PaymentMethod paymentMethod = PaymentMethod.CreditCard,
-        string expenseType = "Personal")
+        ExpenseType expenseType = ExpenseType.Personal)
     {
         return new Expense(
             id ?? Guid.NewGuid(),

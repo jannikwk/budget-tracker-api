@@ -14,7 +14,7 @@ classDiagram-v2
         + Category: Category
         + SubCategory: string?
         + PaymentMethod: PaymentMethod
-        + ExpenseType: string
+        + ExpenseType: ExpenseType
         - ~~Constructor~~ Expense(...)
     }
     
@@ -29,8 +29,17 @@ classDiagram-v2
         DigitalWallet = 7
         BuyNowPayLater = 8
         Crypto = 9
-        Voucher = 10
+        Voucher = 19
         
+    }
+
+    class ExpenseType {
+        <<Enum>>
+        Personal = 1
+        Fixed = 2
+        Variable = 3
+        OneTime = 4
+        Subscription = 5
     }
 
     class Category {
@@ -55,13 +64,28 @@ classDiagram-v2
     
     Expense --> PaymentMethod : uses
     Expense --> Category : uses
+    Expense --> ExpenseType : uses
 
     class Income {
         <<Entity>>
         + Id: Guid
-        + IncomeType: string
+        + IncomeType: IncomeType
         + Amount: decimal
         + Date: DateTime
         - ~~Constructor~~ Income(Id, IncomeType, Amount, Date)
     }
+
+    class IncomeType {
+        <<Enum>>
+        Salary = 1
+        Freelance = 2
+        Business = 3
+        Investment = 4
+        Rental = 5
+        GovernmentBenefit = 6
+        Gift = 7
+        Other = 8
+    }
+
+    Income --> IncomeType : uses
 ```

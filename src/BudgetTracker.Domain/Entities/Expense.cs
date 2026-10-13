@@ -11,10 +11,10 @@ public class Expense
 	public Category Category { get; init; }
 	public string? SubCategory { get; init; }
 	public PaymentMethod PaymentMethod { get; init; }
-	public string ExpenseType { get; init; }
+	public ExpenseType ExpenseType { get; init; }
 
 	public Expense(Guid id, DateTime date, decimal amount, string merchant, Category category,
-		string? subCategory, PaymentMethod paymentMethod, string expenseType)
+		string? subCategory, PaymentMethod paymentMethod, ExpenseType expenseType)
 	{
 		if (id == Guid.Empty)
 			throw new ArgumentException("Id cannot be empty.", nameof(id));
@@ -34,7 +34,7 @@ public class Expense
 		if (!Enum.IsDefined(paymentMethod))
 			throw new ArgumentException("Payment method is required.", nameof(paymentMethod));
 
-		if (string.IsNullOrWhiteSpace(expenseType))
+		if (!Enum.IsDefined(expenseType))
 			throw new ArgumentException("Expense type is required.", nameof(expenseType));
 
 		Id = id;
