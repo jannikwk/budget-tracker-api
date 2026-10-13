@@ -1,20 +1,20 @@
-using System;
+using BudgetTracker.Domain.Enums;
 
 namespace BudgetTracker.Domain.Entities;
 
 public class Income
 {
     public Guid Id { get; init; }
-    public string IncomeType { get; init; }
+    public IncomeType IncomeType { get; init; }
     public decimal Amount { get; init; }
     public DateTime Date { get; init; }
 
-    public Income(Guid id, string incomeType, decimal amount, DateTime date)
+    public Income(Guid id, IncomeType incomeType, decimal amount, DateTime date)
     {
         if (id == Guid.Empty)
             throw new ArgumentException("Id must be a valid Id", nameof(id));
 
-        if (string.IsNullOrWhiteSpace(incomeType))
+        if (!Enum.IsDefined(incomeType))
             throw new ArgumentException("Income type is required.", nameof(incomeType));
 
         if (amount <= 0)

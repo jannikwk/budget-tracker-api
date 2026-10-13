@@ -1,4 +1,5 @@
 ﻿using BudgetTracker.Domain.Entities;
+using BudgetTracker.Domain.Enums;
 
 namespace BudgetTracker.Unittests.Entities;
 
@@ -15,19 +16,19 @@ public class ExpenseTests
             date,
             42.50m,
             "Coffee Shop",
-            "Food",
+            Category.Food,
             "Coffee",
-            "Card",
-            "Personal");
+            PaymentMethod.CreditCard,
+            ExpenseType.Personal);
 
         Assert.Equal(id, expense.Id);
         Assert.Equal(date, expense.Date);
         Assert.Equal(42.50m, expense.Amount);
         Assert.Equal("Coffee Shop", expense.Merchant);
-        Assert.Equal("Food", expense.Category);
+        Assert.Equal(Category.Food, expense.Category);
         Assert.Equal("Coffee", expense.SubCategory);
-        Assert.Equal("Card", expense.PaymentMethod);
-        Assert.Equal("Personal", expense.ExpenseType);
+        Assert.Equal(PaymentMethod.CreditCard, expense.PaymentMethod);
+        Assert.Equal(ExpenseType.Personal, expense.ExpenseType);
     }
 
     [Fact]
@@ -60,14 +61,14 @@ public class ExpenseTests
     [InlineData(nameof(Expense.Category))]
     [InlineData(nameof(Expense.PaymentMethod))]
     [InlineData(nameof(Expense.ExpenseType))]
-    public void Constructor_WithMissingRequiredText_ThrowsArgumentException(string field)
+    public void Constructor_WithMissingRequiredValue_ThrowsArgumentException(string field)
     {
         var exception = Assert.Throws<ArgumentException>(() => field switch
         {
             nameof(Expense.Merchant) => CreateExpense(merchant: " "),
-            nameof(Expense.Category) => CreateExpense(category: ""),
-            nameof(Expense.PaymentMethod) => CreateExpense(paymentMethod: "\t"),
-            nameof(Expense.ExpenseType) => CreateExpense(expenseType: " "),
+            nameof(Expense.Category) => CreateExpense(category: (Category)999),
+            nameof(Expense.PaymentMethod) => CreateExpense(paymentMethod: (PaymentMethod)999),
+            nameof(Expense.ExpenseType) => CreateExpense(expenseType: (ExpenseType)999),
             _ => throw new ArgumentOutOfRangeException(nameof(field))
         });
 
@@ -79,10 +80,10 @@ public class ExpenseTests
         DateTime? date = null,
         decimal amount = 10m,
         string merchant = "Merchant",
-        string category = "Category",
+        Category category = Category.Food,
         string? subCategory = null,
-        string paymentMethod = "Card",
-        string expenseType = "Personal")
+        PaymentMethod paymentMethod = PaymentMethod.CreditCard,
+        ExpenseType expenseType = ExpenseType.Personal)
     {
         return new Expense(
             id ?? Guid.NewGuid(),
