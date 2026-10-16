@@ -88,4 +88,29 @@ classDiagram-v2
     }
 
     Income --> IncomeType : uses
+    
+    class Budget {
+        <<Entity>>
+        + Id: Guid
+        + TotalPlannedAmount: decimal
+        + StartDate: DateTime
+        + EndDate: DateTime
+        + ~~Constructor~~ Budget(Id, TotalPlannedAmount, StartDate, EndDate)
+        + CalculateSummary() BudgetSummary
+        - IsInRange(date: DateTime) bool
+    }
+    
+    class BudgetSummary {
+        + ExpenseTotalsByCategory: IReadOnlyDictionary<Category, decimal>
+        + IncomeTotalsByType: IReadOnlyDictionary<IncomeType, decimal>
+        + TotalInPeriodExpenses: decimal
+        + RemainingBudget: decimal
+        + ~~Constructor~~ BudgetSummary(...)
+    }
+    
+    Budget --> BudgetSummary : calculates
+    Budget ..> Expense : summarizes
+    Budget ..> Income : summarizes
+    BudgetSummary ..> Category : groups by
+    BudgetSummary ..> IncomeType : groups by
 ```
