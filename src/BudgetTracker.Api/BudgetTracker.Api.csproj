@@ -4,11 +4,16 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>BudgetTracker</RootNamespace>
+    <RootNamespace>BudgetTracker.Api</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.12" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BudgetTracker.Application\BudgetTracker.Application.csproj" />
+    <ProjectReference Include="..\BudgetTracker.Infrastructure\BudgetTracker.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
