@@ -11,18 +11,18 @@ public class BudgetTests
         var budget = CreateBudget();
         var expenses = new[]
         {
-            CreateExpense(new DateTime(2026, 1, 1), 100m, Category.Food),
-            CreateExpense(new DateTime(2026, 1, 15), 25m, Category.Food),
-            CreateExpense(new DateTime(2026, 1, 31), 50m, Category.Housing),
-            CreateExpense(new DateTime(2025, 12, 31), 900m, Category.Food),
-            CreateExpense(new DateTime(2026, 2, 1), 900m, Category.Housing)
+            CreateExpense(new DateOnly(2026, 1, 1), 100m, Category.Food),
+            CreateExpense(new DateOnly(2026, 1, 15), 25m, Category.Food),
+            CreateExpense(new DateOnly(2026, 1, 31), 50m, Category.Housing),
+            CreateExpense(new DateOnly(2025, 12, 31), 900m, Category.Food),
+            CreateExpense(new DateOnly(2026, 2, 1), 900m, Category.Housing)
         };
         var incomes = new[]
         {
-            CreateIncome(new DateTime(2026, 1, 1), 2000m, IncomeType.Salary),
-            CreateIncome(new DateTime(2026, 1, 20), 500m, IncomeType.Salary),
-            CreateIncome(new DateTime(2026, 1, 31), 300m, IncomeType.Freelance),
-            CreateIncome(new DateTime(2025, 12, 31), 5000m, IncomeType.Salary)
+            CreateIncome(new DateOnly(2026, 1, 1), 2000m, IncomeType.Salary),
+            CreateIncome(new DateOnly(2026, 1, 20), 500m, IncomeType.Salary),
+            CreateIncome(new DateOnly(2026, 1, 31), 300m, IncomeType.Freelance),
+            CreateIncome(new DateOnly(2025, 12, 31), 5000m, IncomeType.Salary)
         };
 
         var summary = budget.CalculateSummary(expenses, incomes);
@@ -40,8 +40,8 @@ public class BudgetTests
     public void Constructor_WhenStartDateIsNotBeforeEndDate_ThrowsArgumentException()
     {
         var exception = Assert.Throws<ArgumentException>(() => CreateBudget(
-            startDate: new DateTime(2026, 1, 31),
-            endDate: new DateTime(2026, 1, 1)));
+            startDate: new DateOnly(2026, 1, 31),
+            endDate: new DateOnly(2026, 1, 1)));
 
         Assert.Equal("startDate", exception.ParamName);
     }
@@ -67,17 +67,17 @@ public class BudgetTests
     private static Budget CreateBudget(
         Guid? id = null,
         decimal totalPlannedAmount = 1000m,
-        DateTime? startDate = null,
-        DateTime? endDate = null)
+        DateOnly? startDate = null,
+        DateOnly? endDate = null)
     {
         return new Budget(
             id ?? Guid.NewGuid(),
             totalPlannedAmount,
-            startDate ?? new DateTime(2026, 1, 1),
-            endDate ?? new DateTime(2026, 1, 31));
+            startDate ?? new DateOnly(2026, 1, 1),
+            endDate ?? new DateOnly(2026, 1, 31));
     }
 
-    private static Expense CreateExpense(DateTime date, decimal amount, Category category)
+    private static Expense CreateExpense(DateOnly date, decimal amount, Category category)
     {
         return new Expense(
             Guid.NewGuid(),
@@ -90,7 +90,7 @@ public class BudgetTests
             ExpenseType.Personal);
     }
 
-    private static Income CreateIncome(DateTime date, decimal amount, IncomeType incomeType)
+    private static Income CreateIncome(DateOnly date, decimal amount, IncomeType incomeType)
     {
         return new Income(Guid.NewGuid(), incomeType, amount, date);
     }

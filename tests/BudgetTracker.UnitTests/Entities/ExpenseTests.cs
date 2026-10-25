@@ -9,7 +9,7 @@ public class ExpenseTests
     public void Constructor_WithValidValues_SetsProperties()
     {
         var id = Guid.NewGuid();
-        var date = new DateTime(2026, 1, 15);
+        var date = new DateOnly(2026, 1, 15);
 
         var expense = new Expense(
             id,
@@ -43,7 +43,7 @@ public class ExpenseTests
     public void Constructor_WithFutureDate_ThrowsArgumentException()
     {
         var exception = Assert.Throws<ArgumentException>(() =>
-            CreateExpense(date: DateTime.Now.AddMinutes(1)));
+            CreateExpense(date: DateOnly.FromDateTime(DateTime.UtcNow).AddDays(1)));
 
         Assert.Equal("date", exception.ParamName);
     }
@@ -77,7 +77,7 @@ public class ExpenseTests
 
     private static Expense CreateExpense(
         Guid? id = null,
-        DateTime? date = null,
+        DateOnly? date = null,
         decimal amount = 10m,
         string merchant = "Merchant",
         Category category = Category.Food,
@@ -87,7 +87,7 @@ public class ExpenseTests
     {
         return new Expense(
             id ?? Guid.NewGuid(),
-            date ?? DateTime.Now.AddDays(-1),
+            date ?? DateOnly.FromDateTime(DateTime.UtcNow).AddDays(-1),
             amount,
             merchant,
             category,

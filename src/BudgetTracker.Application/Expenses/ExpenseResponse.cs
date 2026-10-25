@@ -4,7 +4,7 @@ namespace BudgetTracker.Application.Expenses;
 
 public sealed record ExpenseResponse(
     Guid Id,
-    DateTime Date,
+    DateOnly Date,
     decimal Amount,
     string Merchant,
     Category Category,
