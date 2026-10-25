@@ -11,9 +11,21 @@ public class ExpenseService : IExpensesService
         _expensesRepository = expensesRepository;
     }
 
-    public Task<ExpenseResponse> CreateAsync(CreateExpenseRequest request, CancellationToken cancellationToken)
+    public async Task<ExpenseResponse> CreateAsync(CreateExpenseRequest request, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var expense = new Expense(
+            Guid.NewGuid(),
+            new DateOnly(request.Date.Year, request.Date.Month, request.Date.Day),
+            request.Amount,
+            request.Merchant,
+            request.Category,
+            request.SubCategory,
+            request.PaymentMethod,
+            request.ExpenseType
+        );
+
+        await _expensesRepository.Add(expense, cancellationToken);
+        return MapToExpenseResponse(expense);
     }
 
     public Task<bool> DeleteAsync(string id, CancellationToken cancellationToken)
