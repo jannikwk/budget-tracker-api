@@ -6,10 +6,10 @@ public class Budget
 {
     public Guid Id { get; init; }
     public decimal TotalPlannedAmount { get; init; }
-    public DateTime StartDate { get; init; }
-    public DateTime EndDate { get; init; }
+    public DateOnly StartDate { get; init; }
+    public DateOnly EndDate { get; init; }
 
-    public Budget(Guid id, decimal totalPlannedAmount, DateTime startDate, DateTime endDate)
+    public Budget(Guid id, decimal totalPlannedAmount, DateOnly startDate, DateOnly endDate)
     {
         if (id == Guid.Empty)
             throw new ArgumentException("Id cannot be empty.", nameof(id));
@@ -52,7 +52,7 @@ public class Budget
             TotalPlannedAmount - totalInPeriodExpenses);
     }
 
-    private bool IsInRange(DateTime date) => date >= StartDate && date <= EndDate;
+    private bool IsInRange(DateOnly date) => date >= StartDate && date <= EndDate;
 }
 
 public sealed class BudgetSummary

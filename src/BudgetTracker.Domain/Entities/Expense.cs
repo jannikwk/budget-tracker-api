@@ -5,7 +5,7 @@ namespace BudgetTracker.Domain.Entities;
 public class Expense
 {
 	public Guid Id { get; init; }
-	public DateTime Date { get; init; }
+	public DateOnly Date { get; init; }
 	public decimal Amount { get; init; }
 	public string Merchant { get; init; }
 	public Category Category { get; init; }
@@ -13,13 +13,13 @@ public class Expense
 	public PaymentMethod PaymentMethod { get; init; }
 	public ExpenseType ExpenseType { get; init; }
 
-	public Expense(Guid id, DateTime date, decimal amount, string merchant, Category category,
+	public Expense(Guid id, DateOnly date, decimal amount, string merchant, Category category,
 		string? subCategory, PaymentMethod paymentMethod, ExpenseType expenseType)
 	{
 		if (id == Guid.Empty)
 			throw new ArgumentException("Id cannot be empty.", nameof(id));
 
-		if (date > DateTime.Now)
+		if (date > DateOnly.FromDateTime(DateTime.UtcNow))
 			throw new ArgumentException("Date cannot be in the future.", nameof(date));
 
 		if (amount <= 0)
