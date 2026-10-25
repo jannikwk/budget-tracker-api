@@ -9,7 +9,7 @@ public class IncomeTests
     public void Constructor_WithValidValues_SetsProperties()
     {
         var id = Guid.NewGuid();
-        var date = new DateTime(2026, 1, 15);
+        var date = new DateOnly(2026, 1, 15);
 
         var income = new Income(id, IncomeType.Salary, 4200.50m, date);
 
@@ -31,7 +31,7 @@ public class IncomeTests
     public void Constructor_WithFutureDate_ThrowsArgumentException()
     {
         var exception = Assert.Throws<ArgumentException>(() =>
-            CreateIncome(date: DateTime.Now.AddMinutes(1)));
+            CreateIncome(date: DateOnly.FromDateTime(DateTime.Now).AddDays(1)));
 
         Assert.Equal("date", exception.ParamName);
     }
@@ -61,12 +61,12 @@ public class IncomeTests
         Guid? id = null,
         IncomeType incomeType = IncomeType.Salary,
         decimal amount = 1000m,
-        DateTime? date = null)
+        DateOnly? date = null)
     {
         return new Income(
             id ?? Guid.NewGuid(),
             incomeType,
             amount,
-            date ?? DateTime.Now.AddDays(-1));
+            date ?? DateOnly.FromDateTime(DateTime.Now).AddDays(-1));
     }
 }

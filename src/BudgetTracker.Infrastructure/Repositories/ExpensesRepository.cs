@@ -10,7 +10,7 @@ public class ExpensesRepository : IExpensesRepository
     [
         new Expense(
             Guid.NewGuid(),
-            DateTime.UtcNow,
+            DateOnly.FromDateTime(DateTime.UtcNow),
             100.00m,
             "Amazon",
             Category.Shopping,
@@ -20,7 +20,7 @@ public class ExpensesRepository : IExpensesRepository
         ),
         new Expense(
             Guid.NewGuid(),
-            DateTime.UtcNow.AddDays(-1),
+            DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-1)),
             50.00m,
             "Starbucks",
             Category.Food,
@@ -29,6 +29,13 @@ public class ExpensesRepository : IExpensesRepository
             ExpenseType.Personal
         )
     ];
+
+    public Task Add(Expense expense, CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        _expenses.Add(expense);
+        return Task.CompletedTask;
+    }
 
     public Task<IReadOnlyList<Expense>> GetAllAsync(CancellationToken cancellationToken)
     {
