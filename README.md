@@ -1,6 +1,6 @@
 # Budget Tracker API
 
-Budget Tracker is an ASP.NET Core Web API for recording and reviewing personal expenses. It provides a small foundation for a budget-management application by separating the API, application services, domain model, and infrastructure concerns, making the project straightforward to extend with persistence, income tracking, budgets, and reporting.
+Budget Tracker is an ASP.NET Core Web API for recording and reviewing personal expenses. It provides a small foundation for a budget-management application by separating the API, application services, domain model, and infrastructure concerns, making the project straightforward to extend with persistence and more.
 
 ## Features
 
@@ -100,7 +100,7 @@ dotnet test .\BudgetTracker.slnx
 
 ## Documentation
 
-- [Domain and application class diagram](docs/uml/ClassDiagram.md)
+- [API - Class diagram](docs/uml/ClassDiagram.md)
 
 ## Project structure
 
