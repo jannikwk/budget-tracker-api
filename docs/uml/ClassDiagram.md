@@ -1,6 +1,6 @@
 # Class diagram
 
-The diagram below reflects the current domain model, application contracts, and implemented API flow. `ExpenseService` exposes update and delete operations through its interface, but those operations are not implemented yet.
+The diagram below reflects the current domain model, application contracts, infrastructure implementation, and API flow. `ExpenseService` exposes update and delete operations through its interface, but those operations are not implemented yet.
 
 ```mermaid
 classDiagram-v2
@@ -163,6 +163,9 @@ classDiagram-v2
             + GetAllAsync(CancellationToken) Task~IReadOnlyList~Expense~
         }
 
+    }
+
+    namespace Infrastructure {
         class ExpensesRepository {
             - _expenses: List~Expense~
             + Add(Expense, CancellationToken) Task
