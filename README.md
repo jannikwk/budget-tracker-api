@@ -98,6 +98,10 @@ Run the unit tests from the repository root:
 dotnet test .\BudgetTracker.slnx
 ```
 
+## Documentation
+
+- [Domain and application class diagram](docs/uml/ClassDiagram.md)
+
 ## Project structure
 
 ```text
