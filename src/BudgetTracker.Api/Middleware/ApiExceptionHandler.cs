@@ -3,28 +3,102 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BudgetTracker.Api.Middleware;
 
-internal sealed class ApiExceptionHandler(ILogger<ApiExceptionHandler> logger)
-    : IExceptionHandler
+internal sealed class ApiExceptionHandler(ILogger<ApiExceptionHandler> logger): IExceptionHandler
 {
-    public async ValueTask<bool> TryHandleAsync(
+    public ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
+    {
+        return exception switch
+        {
+            KeyNotFoundException notFoundException =>
+                HandleNotFoundAsync(httpContext, notFoundException, cancellationToken),
+            ArgumentException argumentException =>
+                HandleBadRequestAsync(httpContext, argumentException, cancellationToken),
+            InvalidOperationException conflictException =>
+                HandleConflictAsync(httpContext, conflictException, cancellationToken),
+            _ => HandleUnexpectedAsync(httpContext, exception, cancellationToken)
+        };
+    }
+
+    private ValueTask<bool> HandleNotFoundAsync(
+        HttpContext httpContext,
+        KeyNotFoundException exception,
+        CancellationToken cancellationToken)
+    {
+        return HandleAsync(
+            httpContext,
+            exception,
+            StatusCodes.Status404NotFound,
+            "Not Found",
+            LogLevel.Information,
+            cancellationToken);
+    }
+
+    private ValueTask<bool> HandleBadRequestAsync(
+        HttpContext httpContext,
+        ArgumentException exception,
+        CancellationToken cancellationToken)
+    {
+        return HandleAsync(
+            httpContext,
+            exception,
+            StatusCodes.Status400BadRequest,
+            "Bad Request",
+            LogLevel.Warning,
+            cancellationToken);
+    }
+
+    private ValueTask<bool> HandleConflictAsync(
+        HttpContext httpContext,
+        InvalidOperationException exception,
+        CancellationToken cancellationToken)
+    {
+        return HandleAsync(
+            httpContext,
+            exception,
+            StatusCodes.Status409Conflict,
+            "Conflict",
+            LogLevel.Warning,
+            cancellationToken);
+    }
+
+    private ValueTask<bool> HandleUnexpectedAsync(
         HttpContext httpContext,
         Exception exception,
         CancellationToken cancellationToken)
     {
-        if (exception is not ArgumentException)
-        {
-            return false;
-        }
+        return HandleAsync(
+            httpContext,
+            exception,
+            StatusCodes.Status500InternalServerError,
+            "Internal Server Error",
+            LogLevel.Error,
+            cancellationToken,
+            "An unexpected error occurred.");
+    }
 
-        logger.LogWarning(exception, "Invalid expense request.");
+    private async ValueTask<bool> HandleAsync(
+        HttpContext httpContext,
+        Exception exception,
+        int statusCode,
+        string title,
+        LogLevel logLevel,
+        CancellationToken cancellationToken,
+        string? detail = null)
+    {
+        logger.Log(
+            logLevel,
+            exception,
+            "Request failed with status code {StatusCode}.",
+            statusCode);
 
-        httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+        httpContext.Response.StatusCode = statusCode;
         await httpContext.Response.WriteAsJsonAsync(new ProblemDetails
         {
-            Status = StatusCodes.Status400BadRequest,
-            Title = "Bad Request",
-            Detail = "The expense request is invalid.",
-            Instance = httpContext.Request.Path
+            Status = statusCode,
+            Title = title,
+            Detail = detail ?? exception.Message,
+            Instance = httpContext.Request.Path,
+            Extensions = { ["traceId"] = httpContext.TraceIdentifier }
         }, cancellationToken);
 
         return true;
