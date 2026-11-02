@@ -161,6 +161,7 @@ classDiagram-v2
             <<Interface>>
             + Add(Expense, CancellationToken) Task
             + GetAllAsync(CancellationToken) Task~IReadOnlyList~Expense~
+            + GetByIdAsync(string, CancellationToken) Task~Expense?~
         }
 
     }
@@ -170,6 +171,7 @@ classDiagram-v2
             - _expenses: List~Expense~
             + Add(Expense, CancellationToken) Task
             + GetAllAsync(CancellationToken) Task~IReadOnlyList~Expense~
+            + GetByIdAsync(string, CancellationToken) Task~Expense?~
         }
     }
 
