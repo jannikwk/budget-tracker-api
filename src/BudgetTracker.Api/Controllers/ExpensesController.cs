@@ -5,14 +5,9 @@ namespace BudgetTracker.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ExpensesController : ControllerBase
+public class ExpensesController(IExpensesService expensesService) : ControllerBase
 {
-    private readonly IExpensesService _expensesService;
-
-    public ExpensesController(IExpensesService expensesService)
-    {
-        _expensesService = expensesService;
-    }
+    private readonly IExpensesService _expensesService = expensesService;
 
     [HttpPost]
     public async Task<ActionResult<ExpenseResponse>> Create(CreateExpenseRequest request, CancellationToken cancellationToken)
@@ -33,8 +28,10 @@ public class ExpensesController : ControllerBase
     {
         var expense = await _expensesService.GetByIdAsync(id, cancellationToken);
         
-        if (expense == null) return NotFound();
-    
+        if (expense == null) {
+            return NotFound();
+        }
+
         return Ok(expense);
     }
 }
