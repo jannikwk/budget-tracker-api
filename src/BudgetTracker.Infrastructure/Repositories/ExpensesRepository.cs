@@ -41,4 +41,9 @@ public class ExpensesRepository : IExpensesRepository
     {
         return Task.FromResult<IReadOnlyList<Expense>>(_expenses);
     }
+
+    public Task<Expense?> GetByIdAsync(string id, CancellationToken cancellationToken)
+    {
+        return Task.FromResult(_expenses.FirstOrDefault(e => e.Id.ToString() == id));
+    }
 }

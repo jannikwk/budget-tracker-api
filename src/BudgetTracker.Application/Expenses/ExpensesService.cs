@@ -2,14 +2,9 @@ using BudgetTracker.Domain.Entities;
 
 namespace BudgetTracker.Application.Expenses;
 
-public class ExpenseService : IExpensesService
+public class ExpenseService(IExpensesRepository expensesRepository) : IExpensesService
 {
-    private readonly IExpensesRepository _expensesRepository;
-
-    public ExpenseService(IExpensesRepository expensesRepository)
-    {
-        _expensesRepository = expensesRepository;
-    }
+    private readonly IExpensesRepository _expensesRepository = expensesRepository;
 
     public async Task<ExpenseResponse> CreateAsync(CreateExpenseRequest request, CancellationToken cancellationToken)
     {
@@ -39,9 +34,15 @@ public class ExpenseService : IExpensesService
         return [.. exenses.Select(MapToExpenseResponse)];
     }
 
-    public Task<ExpenseResponse?> GetByIdAsync(string id, CancellationToken cancellationToken)
+    public async Task<ExpenseResponse?> GetByIdAsync(string id, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var expense = await _expensesRepository.GetByIdAsync(id, cancellationToken);
+
+        if (expense == null) {
+            throw new KeyNotFoundException($"Expense with id {id} not found.");
+        }
+
+        return MapToExpenseResponse(expense);
     }
 
     public Task<bool> UpdateAsync(string id, UpdateExpenseRequest request, CancellationToken cancellationToken)

@@ -6,5 +6,5 @@ public interface IExpensesRepository
 {
     Task Add(Expense expense, CancellationToken cancellationToken);
     Task<IReadOnlyList<Expense>> GetAllAsync(CancellationToken cancellationToken);
-
+    Task<Expense?> GetByIdAsync(string id, CancellationToken cancellationToken);
 }
